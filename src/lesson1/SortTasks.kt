@@ -173,8 +173,7 @@ fun sortSequence(inputName: String, outputName: String) {
                 }
                 currentValue == maxValue -> maxKey = Math.min(tmp, maxKey)
             }
-        }
-        else map[tmp] = 1
+        } else map[tmp] = 1
     }
     File(outputName).printWriter().use {
         for (i in 0 until allValues.size) {
