@@ -2,6 +2,10 @@
 
 package lesson1
 
+import java.io.File
+import java.util.*
+import kotlin.collections.HashMap
+
 /**
  * Сортировка времён
  *
@@ -94,8 +98,28 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 99.5
  * 121.3
  */
+// Трудоемкость: T = O(n)
+// Ресурсоемкость: R = O(n)
 fun sortTemperatures(inputName: String, outputName: String) {
-    TODO()
+    val min = -2730
+    val max = 5000
+    val count = IntArray(max - min + 1)
+    val input = Scanner(File(inputName))
+    while (input.hasNextLine()) {
+        val temp = ((input.nextLine()).toDouble() * 10).toInt()
+        count[temp - min]++
+    }
+    File(outputName).printWriter().use {
+        for (i in 0 until count.size) {
+            var index = count[i]
+            if (index == 0) continue
+            while (index > 0) {
+                it.println((i + min).toDouble() / 10)
+                index--
+            }
+        }
+    }
+    return print(count)
 }
 
 /**
@@ -127,8 +151,40 @@ fun sortTemperatures(inputName: String, outputName: String) {
  * 2
  * 2
  */
+// Трудоемкость: T = O(n)
+// Ресурсоемкость: R = O(n)
 fun sortSequence(inputName: String, outputName: String) {
-    TODO()
+    val map = HashMap<Int, Int>()
+    val allValues = mutableListOf<Int>()
+    val input = Scanner(File(inputName))
+    var maxValue = 0
+    var maxKey = 0
+    var currentValue: Int
+    while (input.hasNextLine()) {
+        val tmp = input.nextLine().toInt()
+        allValues.add(tmp)
+        if (map.containsKey(tmp)) {
+            currentValue = map.getValue(tmp) + 1
+            map[tmp] = currentValue
+            when {
+                currentValue > maxValue -> {
+                    maxValue = currentValue
+                    maxKey = tmp
+                }
+                currentValue == maxValue -> maxKey = Math.min(tmp, maxKey)
+            }
+        }
+        else map[tmp] = 1
+    }
+    File(outputName).printWriter().use {
+        for (i in 0 until allValues.size) {
+            val temp = allValues[i]
+            if (temp == maxKey) continue
+            it.println(temp)
+        }
+        for (i in 1..maxValue) it.println(maxKey)
+    }
+    return print(allValues)
 }
 
 /**

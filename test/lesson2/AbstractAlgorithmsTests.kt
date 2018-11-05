@@ -74,11 +74,13 @@ abstract class AbstractAlgorithmsTests {
     }
 
     fun longestCommonSubstring(longestCommonSubstring: (String, String) -> String) {
+        assertEquals("и", longestCommonSubstring("диметилалкилбензиламмонийхлорид", "и"))
+        assertEquals("б", longestCommonSubstring("б", "бактериологический"))
         assertEquals("", longestCommonSubstring("мой мир", "я"))
         assertEquals("зд", longestCommonSubstring("здравствуй мир", "мы здесь"))
         assertEquals("СЕРВАТОР", longestCommonSubstring("ОБСЕРВАТОРИЯ", "КОНСЕРВАТОРЫ"))
         assertEquals("огда ", longestCommonSubstring(
-                """
+            """
 Мой дядя самых честных правил,
 Когда не в шутку занемог,
 Он уважать себя заставил
@@ -93,8 +95,8 @@ abstract class AbstractAlgorithmsTests {
 Печально подносить лекарство,
 Вздыхать и думать про себя:
 Когда же черт возьмет тебя!
-                """.trimIndent(),
-                """
+            """.trimIndent(),
+            """
 Так думал молодой повеса,
 Летя в пыли на почтовых,
 Всевышней волею Зевеса
@@ -109,11 +111,11 @@ abstract class AbstractAlgorithmsTests {
 Или блистали, мой читатель;
 Там некогда гулял и я:
 Но вреден север для меня
-                """.trimIndent()
-        ))
-        assertEquals("\n(с) Этот весь длинный-длинный текст является цитатой из Пушкина, поэма \"Руслан и Людмила\"\n",
-                longestCommonSubstring(
-                        """
+            """.trimIndent()
+    ))
+   assertEquals("\n(с) Этот весь длинный-длинный текст является цитатой из Пушкина, поэма \"Руслан и Людмила\"\n",
+            longestCommonSubstring(
+                    """
 Дела давно минувших дней,
 Преданья старины глубокой.
 
@@ -390,8 +392,8 @@ abstract class AbstractAlgorithmsTests {
 Замков безжалостных дверей,
 Он только немощный мучитель
 Прелестной пленницы своей.
-                """.trimIndent(),
-                        """
+            """.trimIndent(),
+                    """
 Вокруг нее он молча бродит,
 Клянет жестокий жребий свой...
 Но, добрый витязь, день проходит,
@@ -644,8 +646,8 @@ abstract class AbstractAlgorithmsTests {
 Уже зовет меня могила;
 Но чувства прежние свои
 Еще старушка не забыла
-                """.trimIndent()
-                ))
+            """.trimIndent()
+            ))
     }
 
     fun calcPrimesNumber(calcPrimesNumber: (Int) -> Int) {
@@ -675,5 +677,7 @@ abstract class AbstractAlgorithmsTests {
     fun baldaSearcher(baldaSearcher: (String, Set<String>) -> Set<String>) {
         assertEquals(setOf("ТРАВА", "КРАН", "АКВА", "НАРТЫ"),
                 baldaSearcher("input/balda_in1.txt", setOf("ТРАВА", "КРАН", "АКВА", "НАРТЫ", "РАК")))
+        assertEquals(setOf("КАРТА", "ПОРТФЕЛЬ", "КОМПАС"),
+                baldaSearcher("input/balda_in2.txt", setOf("КАРТА", "ПАРАМЕТР", "ПОРТФЕЛЬ", "АНИМЕ", "КОМПАС")))
     }
 }

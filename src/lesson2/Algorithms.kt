@@ -2,6 +2,9 @@
 
 package lesson2
 
+import javafx.scene.control.Cell
+import java.io.File
+
 /**
  * Получение наибольшей прибыли (она же -- поиск максимального подмассива)
  * Простая
@@ -91,8 +94,38 @@ fun josephTask(menNumber: Int, choiceInterval: Int): Int {
  * Если имеется несколько самых длинных общих подстрок одной длины,
  * вернуть ту из них, которая встречается раньше в строке first.
  */
+// Трудоемкость: T = O(mn)
+// Ресурсоемоксть: R = O(mn)
 fun longestCommonSubstring(first: String, second: String): String {
-    TODO()
+    var length: Int
+    var startIndex = 0
+    var maxLength = 0
+    for (i in 0 until first.length) {
+        length = findSubstring(i, first, second)
+        if (length > maxLength) {
+            startIndex = i
+            maxLength = length
+        }
+    }
+    if (maxLength == 0) return ""
+    return first.substring(startIndex, startIndex + maxLength)
+}
+
+fun findSubstring(index: Int, fWord: String, sWord: String): Int {
+    var count = 0
+    var maxCount = 0
+    for (i in 0 until sWord.length) {
+        for (k in i until sWord.length) {
+            if (count >= fWord.length || index + count >= fWord.length) break
+            if (fWord[index + count] != sWord[k]) {
+                if (count > maxCount) maxCount = count
+                break
+            } else count++
+        }
+        if (count > maxCount) maxCount = count
+        count = 0
+    }
+    return maxCount
 }
 
 /**
@@ -135,6 +168,73 @@ fun calcPrimesNumber(limit: Int): Int {
  * В файле буквы разделены пробелами, строки -- переносами строк.
  * Остальные символы ни в файле, ни в словах не допускаются.
  */
+data class Cell(val letter: Char, var flag: Boolean)
+
 fun baldaSearcher(inputName: String, words: Set<String>): Set<String> {
-    TODO()
+    val board = mutableListOf<lesson2.Cell>()
+    var x = 0
+    var lines = 0
+    for (line in File(inputName).readLines()) {
+        for (char in line) {
+            if (char == ' ') continue
+            board.add(Cell(char, false))
+            x++
+        }
+        lines++
+    }
+    x /= lines
+    val result = mutableSetOf<String>()
+    for (word in words) {
+        val flag = findWord(word, board, x)
+        if (flag) result.add(word)
+    }
+    return result
+}
+
+fun findWord(word: String, board: MutableList<lesson2.Cell>, x: Int): Boolean {
+    for (i in 0 until board.size) {
+        if (board[i].letter == word[0]) {
+            board[i].flag = true
+            if (findLetters(x, i, word, board, 1)) {
+                return true
+            }
+            for (k in 0 until board.size) {
+                board[k].flag = false
+            }
+        }
+    }
+    return false
+}
+
+fun findLetters(x: Int, position: Int, word: String, board: MutableList<lesson2.Cell>, index: Int): Boolean {
+    if (index == word.length) return true
+    if (position + x < board.size) {
+        if (board[position + x].letter == word[index]) {
+            board[position].flag = true
+            if (!board[position + x].flag && findLetters(x, position + x, word, board, index + 1))
+                return true
+        }
+    }
+    if (position - x > 0) {
+        if (board[position - x].letter == word[index]) {
+            board[position].flag = true
+            if (!board[position - x].flag && findLetters(x, position - x, word, board, index + 1))
+                return true
+        }
+    }
+    if ((position + 1) % x != 0) {
+        if (board[position + 1].letter == word[index]) {
+            board[position].flag = true
+            if (!board[position + 1].flag && findLetters(x, position + 1, word, board, index + 1))
+                return true
+        }
+    }
+    if (position - 1 >= 0 && (position % x) != 0) {
+        if (board[position - 1].letter == word[index]) {
+            board[position].flag = true
+            if (!board[position - 1].flag && findLetters(x, position - 1, word, board, index + 1))
+                return true
+        }
+    }
+    return false
 }
