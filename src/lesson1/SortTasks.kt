@@ -99,7 +99,7 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 121.3
  */
 // Трудоемкость: T = O(n)
-// Ресурсоемкость: R = O(n)
+// Ресурсоемкость: R = O(1)
 fun sortTemperatures(inputName: String, outputName: String) {
     val min = -2730
     val max = 5000
