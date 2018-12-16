@@ -91,7 +91,7 @@ fun Graph.minimumSpanningTree(): Graph {
  * Эта задача может быть зачтена за пятый и шестой урок одновременно
  */
 // Трудоемкость: T = O(V + E)
-// Ресурсоемкость: R = O(V^2)
+// Ресурсоемкость: R = O(2*V)
 fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
     val root = this.vertices.first()
     val rootIs = countChildren(true, root)
