@@ -135,6 +135,29 @@ abstract class AbstractGraphTests {
         val independent = graph.largestIndependentVertexSet()
         assertEquals(setOf(graph["A"], graph["D"], graph["E"], graph["F"], graph["G"], graph["J"]),
                 independent)
+
+        val graph2 = GraphBuilder().apply {
+            val a = addVertex("A")
+            val b = addVertex("B")
+            val c = addVertex("C")
+            val d = addVertex("D")
+            val e = addVertex("E")
+            val f = addVertex("F")
+            val g = addVertex("G")
+            val h = addVertex("H")
+            val i = addVertex("I")
+            addConnection(a, b)
+            addConnection(b, d)
+            addConnection(d, f)
+            addConnection(f, h)
+            addConnection(a, c)
+            addConnection(c, e)
+            addConnection(e, g)
+            addConnection(g, i)
+        }.build()
+        val independent2 = graph2.largestIndependentVertexSet()
+        assertEquals(setOf(graph2["A"], graph2["D"], graph2["E"], graph2["H"], graph2["I"]),
+                independent2)
     }
 
     fun longestSimplePath(longestSimplePath: Graph.() -> Path) {
@@ -177,6 +200,35 @@ abstract class AbstractGraphTests {
         }.build()
         val longestPath2 = graph2.longestSimplePath()
         assertEquals(10, longestPath2.length)
+
+        val graph3 = GraphBuilder().apply {
+            val a = addVertex("A")
+            val b = addVertex("B")
+            val c = addVertex("C")
+            val d = addVertex("D")
+            val e = addVertex("E")
+            val f = addVertex("F")
+            val g = addVertex("G")
+            val h = addVertex("H")
+            val i = addVertex("I")
+            val j = addVertex("J")
+            val k = addVertex("K")
+            val l = addVertex("L")
+            addConnection(a, b)
+            addConnection(b, c)
+            addConnection(c, d)
+            addConnection(d, e)
+            addConnection(e, f)
+            addConnection(f, g)
+            addConnection(e, h)
+            addConnection(h, i)
+            addConnection(i, j)
+            addConnection(i, k)
+            addConnection(k, l)
+            addConnection(j, l)
+        }.build()
+        val longestPath3 = graph3.longestSimplePath()
+        assertEquals(9, longestPath3.length)
     }
 
 }

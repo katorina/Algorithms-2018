@@ -2,6 +2,8 @@
 
 package lesson5
 
+import java.util.*
+
 /**
  * Эйлеров цикл.
  * Средняя
@@ -88,8 +90,35 @@ fun Graph.minimumSpanningTree(): Graph {
  *
  * Эта задача может быть зачтена за пятый и шестой урок одновременно
  */
+// Трудоемкость: T = O(V + E)
+// Ресурсоемкость: R = O(V^2)
 fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
-    TODO()
+    val root = this.vertices.first()
+    val rootIs = countChildren(true, root)
+    val rootIsNot = countChildren(false, root)
+
+    return if (rootIs.size > rootIsNot.size) rootIs else rootIsNot
+}
+
+fun Graph.countChildren(rootIsFirst: Boolean, root: Graph.Vertex): Set<Graph.Vertex> {
+    val outChildren = mutableSetOf<Graph.Vertex>()
+    if (rootIsFirst) outChildren.add(root)
+    var lastSize = 1
+    var addOrNot = rootIsFirst
+    val currentChildren = mutableSetOf<Graph.Vertex>()
+    currentChildren.add(root)
+
+    while (currentChildren.isNotEmpty()) {
+        for (i in 0 until lastSize) {
+            this.getNeighbors(currentChildren.first()).forEach { if (!outChildren.contains(it)) currentChildren.add(it) }
+            currentChildren.remove(currentChildren.first())
+        }
+        lastSize = currentChildren.size
+        addOrNot = !addOrNot
+        if (addOrNot) currentChildren.forEach { outChildren.add(it) }
+    }
+
+    return outChildren
 }
 
 /**
@@ -112,6 +141,27 @@ fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
  *
  * Ответ: A, E, J, K, D, C, H, G, B, F, I
  */
+// Трудоемкость: T = O(V!)
+// Ресурсоемкость: R = O(V)
 fun Graph.longestSimplePath(): Path {
-    TODO()
+    val paths = ArrayDeque<Path>()
+
+    for (path in this.vertices) paths.addLast(Path(path))
+    var maxPath = paths.last()
+
+    while (paths.isNotEmpty()) {
+        val currentPath = paths.last()
+        paths.removeLast()
+        val currPathNeighbors = this.getNeighbors(currentPath.vertices.last())
+        while (currPathNeighbors.isNotEmpty()) {
+            val currentNeighbor = currPathNeighbors.last()
+            if (currentPath.contains(currentNeighbor)) {
+                if (currentPath > maxPath) maxPath = currentPath
+            } else paths.addLast(Path(currentPath, this, currentNeighbor))
+            currPathNeighbors.remove(currentNeighbor)
+        }
+    }
+
+    return maxPath
 }
+

@@ -2,6 +2,11 @@
 
 package lesson6
 
+import com.sun.org.apache.xerces.internal.util.IntStack
+import lesson1.sortTemperatures
+import java.io.File
+import java.util.*
+
 /**
  * Наибольшая общая подпоследовательность.
  * Средняя
@@ -29,8 +34,40 @@ fun longestCommonSubSequence(first: String, second: String): String {
  * то вернуть ту, в которой числа расположены раньше (приоритет имеют первые числа).
  * В примере ответами являются 2, 8, 9, 12 или 2, 5, 9, 12 -- выбираем первую из них.
  */
+// Трудоемкость: T = O(N^2)
+// Ресурсоемкость: R = O(N^2)
 fun longestIncreasingSubSequence(list: List<Int>): List<Int> {
-    TODO()
+    if (list.isEmpty() || list.size == 1) return list
+
+    val lists = mutableListOf<MutableList<Int>>()
+    var currNumber: Int
+    var currIndex = 0
+
+    lists.add(mutableListOf(list[0]))
+    while (currIndex < list.size) {
+        currIndex++
+        currNumber = list[currIndex - 1]
+        for (i in 0 until lists.size) {
+            val list1 = lists[i]
+            if (currNumber > lists[i][lists[i].size - 1]) {
+                lists.add(list1.toMutableList())
+                list1.add(currNumber)
+                lists[i] = list1
+            }
+        }
+    }
+
+    var maxLength = lists[0].size
+    var result = lists[0]
+
+    for (currList in lists.toSet()) {
+        if (currList.size > maxLength) {
+            maxLength = currList.size
+            result = currList
+        }
+    }
+
+    return result
 }
 
 /**
@@ -53,8 +90,56 @@ fun longestIncreasingSubSequence(list: List<Int>): List<Int> {
  *
  * Здесь ответ 2 + 3 + 4 + 1 + 2 = 12
  */
+// Трудоемкость: T = O(N^2 + M), где N - высота поля, а M - ширина
+// Ресурсоемкость: R = O((NM)^3)
+data class Path(val y: Int, val x: Int, val count: Int)
+
 fun shortestPathOnField(inputName: String): Int {
-    TODO()
+    val numbers = mutableListOf<List<Int>>()
+    for (line in File(inputName).readLines()) {
+        numbers.add((line.split(' ').map { it.toInt() }))
+    }
+
+    val paths = mutableListOf<Path>()
+    var result = Int.MAX_VALUE
+
+    paths.add(Path(0, 0, numbers[0][0]))
+    var x: Int
+    var y: Int
+    var preSize = paths.size
+
+    loop@ while (true) {
+        for (i in 0 until paths.size) {
+            x = paths[i].x
+            y = paths[i].y
+            if (paths[i].x + 1 <= numbers[0].size - 1)
+                paths.add(Path(y, x + 1, paths[i].count + numbers[y][x + 1]))
+            if (paths[i].y + 1 <= numbers.size - 1)
+                paths.add(Path(y + 1, x, paths[i].count + numbers[y + 1][x]))
+            if (paths[i].x + 1 <= numbers[0].size - 1 && paths[i].y + 1 <= numbers.size - 1)
+                paths.add(Path(y + 1, x + 1, paths[i].count + numbers[y + 1][x + 1]))
+        }
+        for (k in 0 until preSize) {
+            paths.removeAt(0)
+        }
+        preSize = paths.size
+        if (preSize == 0) break@loop
+        for (l in 0 until paths.size) {
+            if (paths[l].x == numbers[0].size - 1 && paths[l].y == numbers.size - 1 && paths[l].count < result)
+                result = paths[l].count
+        }
+        var delIndex = 0
+        while (delIndex < paths.size) {
+            if (paths[delIndex].count > result) {
+                paths.removeAt(delIndex)
+                delIndex--
+                preSize--
+            }
+            delIndex++
+        }
+    }
+
+    return result
 }
 
 // Задачу "Максимальное независимое множество вершин в графе без циклов"
