@@ -95,7 +95,7 @@ fun josephTask(menNumber: Int, choiceInterval: Int): Int {
  * вернуть ту из них, которая встречается раньше в строке first.
  */
 // Трудоемкость: T = O(mn)
-// Ресурсоемоксть: R = O(mn)
+// Ресурсоемоксть: R = O(1)
 fun longestCommonSubstring(first: String, second: String): String {
     var length: Int
     var startIndex = 0
